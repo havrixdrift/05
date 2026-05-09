@@ -483,12 +483,24 @@ permalink: /yulianti/
             }
             .query-container *{margin:0;padding:0;box-sizing:border-box;}
 
-            .query-identity{display:flex;align-items:center;gap:12px;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border-color);}
+            .query-identity{display:flex;align-items:center;gap:12px;margin-bottom:0.5rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border-color);}
             .query-avatar{flex-shrink:0;width:48px;height:48px;border-radius:50%;overflow:hidden;}
             .query-avatar svg{width:48px;height:48px;}
             .page-h1{font-size:var(--font-heading);font-weight:600;color:var(--text-primary);border-bottom:none!important;padding-bottom:0!important;margin-bottom:0!important;flex:1;}
 
-            .breadcrumb{font-size:var(--font-meta);color:var(--text-secondary);margin-bottom:0.5rem;}
+            .toc-card{
+                background:var(--bg-card);border:1px solid var(--border-color);
+                border-radius:var(--card-radius);padding:var(--card-padding);margin-bottom:1rem;
+            }
+            .toc-title{font-size:0.8rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem;padding-bottom:0.25rem;border-bottom:1px solid var(--border-color);}
+            .toc-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,1fr);gap:0.3rem;}
+            .toc-list li{padding:0.3rem 0;border-bottom:1px solid #2a2a2b;font-size:0.7rem;}
+            .toc-list li:last-child{border-bottom:none;}
+            .toc-list a{color:var(--text-secondary);text-decoration:none;display:block;transition:color 0.2s;}
+            .toc-list a:hover{color:var(--accent);}
+            .toc-number{color:var(--accent);font-weight:700;margin-right:0.25rem;}
+
+            .breadcrumb{font-size:var(--font-meta);color:var(--text-secondary);margin-bottom:1rem;}
             .breadcrumb a{color:var(--text-secondary);text-decoration:none;}
             .breadcrumb a:hover{text-decoration:underline;}
             .breadcrumb span:last-child{color:var(--text-primary);}
@@ -566,15 +578,6 @@ permalink: /yulianti/
             .sidebar-item a:hover{color:var(--accent-hover);text-decoration:underline;}
             .sidebar-number{color:var(--accent);font-weight:700;margin-right:0.25rem;}
 
-            .toc-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--card-radius);padding:var(--card-padding);margin-bottom:1rem;}
-            .toc-title{font-size:0.75rem;font-weight:600;margin-bottom:0.5rem;border-bottom:1px solid var(--border-color);padding-bottom:0.25rem;color:var(--text-primary);}
-            .toc-list{list-style:none;padding:0;margin:0;}
-            .toc-list li{padding:0.3rem 0;border-bottom:1px solid #2a2a2b;font-size:var(--font-meta);}
-            .toc-list li:last-child{border-bottom:none;}
-            .toc-list a{color:var(--text-secondary);text-decoration:none;display:block;transition:color 0.2s;}
-            .toc-list a:hover{color:var(--accent);}
-            .toc-number{color:var(--accent);font-weight:700;margin-right:0.25rem;}
-
             .related-searches{margin-top:1.5rem;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--card-radius);padding:var(--card-padding);}
             .related-title{font-size:0.8rem;font-weight:600;color:var(--text-primary);margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border-color);}
             .related-links{display:flex;flex-wrap:wrap;gap:0.5rem;}
@@ -646,6 +649,7 @@ permalink: /yulianti/
                 .post-feed.gallery{grid-template-columns:repeat(2,1fr);}
                 .download-grid{grid-template-columns:1fr;}
                 .also-viewed-grid{grid-template-columns:repeat(2,1fr);}
+                .toc-list{grid-template-columns:1fr;}
             }
             @media(max-width:480px){
                 .post-feed.gallery{grid-template-columns:1fr;}
@@ -655,13 +659,24 @@ permalink: /yulianti/
         </style>
 
         <div class="query-container">
+            <!-- IDENTITY + AVATAR -->
             <div class="query-identity">
                 <div id="query-avatar" class="query-avatar"></div>
                 <h1 id="page-h1" class="page-h1"></h1>
             </div>
+
+            <!-- TOC (SETELAH H1) -->
+            <div class="toc-card" id="toc-card">
+                <div class="toc-title">Table of Contents</div>
+                <ol class="toc-list" id="toc-list"></ol>
+            </div>
+
+            <!-- BREADCRUMB -->
             <div class="breadcrumb">
                 <a href="/yulianti/">Home</a> / <span id="breadcrumb-domain"></span> / search: <span id="breadcrumb-query"></span>
             </div>
+
+            <!-- HEADER CARD -->
             <div class="header-card">
                 <div class="header-info">
                     <h2 id="header-title"></h2>
@@ -669,6 +684,8 @@ permalink: /yulianti/
                 </div>
                 <span class="header-action" id="header-action-label"></span>
             </div>
+
+            <!-- SORT BAR -->
             <div class="sort-bar">
                 <span class="sort-active" id="sort-label"></span>
                 <span class="sort-inactive">Newest</span>
@@ -681,6 +698,7 @@ permalink: /yulianti/
                 <div class="video-embed" id="video-embed"></div>
             </div>
 
+            <!-- MAIN + SIDEBAR -->
             <div class="two-col">
                 <div>
                     <div class="post-feed" id="post-feed"></div>
@@ -702,10 +720,6 @@ permalink: /yulianti/
                     </div>
                 </div>
                 <div>
-                    <div class="toc-card" id="toc-card">
-                        <div class="toc-title">Table of Contents</div>
-                        <ol class="toc-list" id="toc-list"></ol>
-                    </div>
                     <div class="sidebar-card">
                         <div class="sidebar-title"><h3 id="sidebar-heading" style="font-size:0.75rem;font-weight:600;margin:0;"></h3></div>
                         <div id="sidebar-links"></div>
@@ -717,6 +731,7 @@ permalink: /yulianti/
                     </div>
                 </div>
             </div>
+
             <hr />
             <div class="query-footer">
                 <div class="footer-links" id="footer-links"></div>
@@ -1098,7 +1113,7 @@ permalink: /yulianti/
 
     /*
      * ============================================
-     * VIDEO YOUTUBE (19 video)
+     * VIDEO YOUTUBE (19 video) + uploadDate ISO
      * ============================================
      */
     var youtubeVideos = [
@@ -1136,7 +1151,7 @@ permalink: /yulianti/
     document.getElementById("video-title").innerText = videoLabel;
     document.getElementById("video-embed").innerHTML = "<iframe src=\"https://www.youtube.com/embed/" + videoId + "\" allowfullscreen></iframe>";
 
-    // VideoObject Schema
+    // VideoObject Schema dengan uploadDate ISO
     var videoSchema = {
         "@context": "https://schema.org",
         "@type": "VideoObject",
@@ -1144,7 +1159,9 @@ permalink: /yulianti/
         "description": videoLabel + " on " + fullName + ". Watch exclusive content.",
         "thumbnailUrl": "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg",
         "embedUrl": "https://www.youtube.com/embed/" + videoId,
-        "contentUrl": "https://www.youtube.com/watch?v=" + videoId
+        "contentUrl": "https://www.youtube.com/watch?v=" + videoId,
+        "uploadDate": "2025-11-01",
+        "duration": "PT1M30S"
     };
     var videoSchemaScript = document.createElement("script");
     videoSchemaScript.type = "application/ld+json";
@@ -1167,23 +1184,23 @@ permalink: /yulianti/
 
     /*
      * ============================================
-     * TOC (Table of Contents)
+     * TOC DINAMIS (query + kata relevan leaked)
      * ============================================
      */
     var tocItems = shuffleArray([
         displayName + " Leaked Videos",
-        displayName + " Exclusive Photos",
-        displayName + " Private Media",
-        displayName + " Full Collection",
-        displayName + " Premium Archive",
-        displayName + " Hidden Content",
-        displayName + " Rare Footage",
-        displayName + " Complete Set",
-        "Download " + displayName + " Files",
-        "Watch " + displayName + " Online",
-        displayName + " Alternative Links",
-        displayName + " Trending Tags"
-    ], combinedSeed).slice(0, 8);
+        displayName + " Leaked Photos",
+        "Leaked " + displayName + " Content",
+        displayName + " Leaked Full Set",
+        displayName + " Leaked Private Media",
+        "Exclusive " + displayName + " Leaked",
+        displayName + " Leaked Archive",
+        displayName + " Leaked Collection",
+        "Download " + displayName + " Leaked",
+        "Watch " + displayName + " Leaked Online",
+        displayName + " Leaked Alternative Links",
+        displayName + " Leaked Trending"
+    ], combinedSeed).slice(0, 10);
 
     var tocHtml = "";
     for (var toc = 0; toc < tocItems.length; toc++) {
@@ -1304,7 +1321,7 @@ permalink: /yulianti/
         var postUrl = "/" + postPath + "/?q=" + encodeURIComponent(linkQuery);
         postItemsForSchema.push({ "position": p + 1, "name": rawTitle, "url": location.origin + postUrl });
 
-        postsHtml += "<div class=\"post-card\" id=\"section-" + (p % 8) + "\">";
+        postsHtml += "<div class=\"post-card\" id=\"section-" + (p % 10) + "\">";
         postsHtml += "<div class=\"post-card-header\">";
         postsHtml += "<span class=\"post-card-community\">" + fullName + "</span>";
         postsHtml += "<span class=\"post-card-author\">" + authorPrefix + "_" + authorNum + "</span>";
@@ -1512,11 +1529,7 @@ permalink: /yulianti/
 })();
 </script>
 
-
-
-
-
-  
+{% include /kw/01.html %}
 {% include /ads/gobloggugel/sosmed.html %}
 </div>
 </body>
