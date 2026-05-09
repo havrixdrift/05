@@ -457,7 +457,7 @@ permalink: /atikah/
     </div>
 
     <!-- ============================================ -->
-    <!-- KONDISI 2: HALAMAN QUERY - FILE MANAGER      -->
+    <!-- KONDISI 2: FILE MANAGER (DENGAN ?q=)         -->
     <!-- ============================================ -->
     <div id="query-page" style="display:none;">
         <style>
@@ -467,7 +467,7 @@ permalink: /atikah/
                 --fm-text:#212529;--fm-text-secondary:#6c757d;--fm-text-muted:#adb5bd;
                 --fm-accent:#0d6efd;--fm-accent-hover:#0b5ed7;
                 --card-radius:4px;--card-padding:0.5rem;
-                --font-heading:1.3rem;--font-row:0.8rem;--font-small:0.7rem;
+                --font-heading:1.2rem;--font-row:0.78rem;--font-small:0.7rem;
             }
             .fm-container{
                 max-width:1100px;margin:0 auto;padding:1rem;
@@ -481,7 +481,7 @@ permalink: /atikah/
             .fm-address-bar{
                 display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.75rem;
                 background:var(--fm-card);border:1px solid var(--fm-border);
-                border-radius:var(--card-radius);margin-bottom:1rem;flex-wrap:wrap;
+                border-radius:var(--card-radius);margin-bottom:0.75rem;flex-wrap:wrap;
             }
             .fm-address-label{font-size:0.7rem;font-weight:600;color:var(--fm-text-secondary);white-space:nowrap;}
             .fm-address-path{display:flex;align-items:center;gap:0.25rem;flex:1;flex-wrap:wrap;font-size:0.75rem;}
@@ -489,11 +489,25 @@ permalink: /atikah/
             .fm-address-path a:hover{background:#e9ecef;text-decoration:underline;}
             .fm-address-sep{color:var(--fm-text-muted);}
 
+            /* TOC */
+            .fm-toc{
+                background:var(--fm-card);border:1px solid var(--fm-border);
+                border-radius:var(--card-radius);padding:0.5rem 0.75rem;margin-bottom:1rem;
+            }
+            .fm-toc-title{font-size:0.7rem;font-weight:600;color:var(--fm-text);margin-bottom:0.4rem;}
+            .fm-toc-list{display:flex;flex-wrap:wrap;gap:0.3rem;}
+            .fm-toc-list a{
+                display:inline-block;padding:0.2rem 0.5rem;background:#fff;
+                border:1px solid var(--fm-border);border-radius:12px;
+                font-size:0.65rem;color:var(--fm-accent);text-decoration:none;transition:all 0.15s;
+            }
+            .fm-toc-list a:hover{background:var(--fm-accent);color:#fff;border-color:var(--fm-accent);}
+
             /* TOOLBAR */
             .fm-toolbar{
                 display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.5rem;
                 background:var(--fm-card);border:1px solid var(--fm-border);
-                border-radius:var(--card-radius);margin-bottom:0.75rem;flex-wrap:wrap;
+                border-radius:var(--card-radius);margin-bottom:1rem;flex-wrap:wrap;
             }
             .fm-toolbar-btn{
                 display:inline-flex;align-items:center;gap:0.25rem;
@@ -504,63 +518,56 @@ permalink: /atikah/
             .fm-toolbar-btn:hover{background:#e9ecef;border-color:var(--fm-border-hover);}
             .fm-toolbar-btn svg{width:14px;height:14px;}
             .fm-toolbar-sep{width:1px;height:20px;background:var(--fm-border);margin:0 0.25rem;}
-            .fm-toolbar-search{
-                margin-left:auto;display:flex;align-items:center;gap:0.25rem;
-                border:1px solid var(--fm-border);border-radius:3px;padding:0.2rem 0.4rem;
-                background:#fff;
-            }
-            .fm-toolbar-search input{
-                border:none;outline:none;font-size:0.7rem;width:140px;background:transparent;color:var(--fm-text);
-            }
-            .fm-toolbar-search button{
-                background:none;border:none;cursor:pointer;padding:0.1rem;color:var(--fm-text-secondary);
-            }
-            .fm-toolbar-search button svg{width:14px;height:14px;}
 
-            /* TWO COL */
-            .fm-two-col{display:grid;grid-template-columns:200px 1fr;gap:1rem;}
-
-            /* FOLDER TREE SIDEBAR */
-            .fm-tree{
+            /* FOLDER SECTION */
+            .fm-folder-section{
                 background:var(--fm-card);border:1px solid var(--fm-border);
-                border-radius:var(--card-radius);padding:0.5rem;font-size:0.7rem;
+                border-radius:var(--card-radius);padding:0.6rem 0.75rem;margin-bottom:0.75rem;
             }
-            .fm-tree-title{
-                font-weight:600;color:var(--fm-text);margin-bottom:0.5rem;
-                padding-bottom:0.3rem;border-bottom:1px solid var(--fm-border);
-                font-size:0.7rem;
+            .fm-folder-heading{
+                font-size:0.9rem;font-weight:600;color:var(--fm-text);
+                margin-bottom:0.4rem;padding-bottom:0.3rem;
+                border-bottom:1px solid var(--fm-border);
+                display:flex;align-items:center;gap:0.4rem;
             }
-            .fm-tree-item{padding:0.25rem 0;display:flex;align-items:center;gap:0.3rem;}
-            .fm-tree-item a{color:var(--fm-text);text-decoration:none;display:flex;align-items:center;gap:0.3rem;}
-            .fm-tree-item a:hover{color:var(--fm-accent);text-decoration:underline;}
-            .fm-tree-item svg{width:14px;height:14px;flex-shrink:0;color:var(--fm-accent);}
-            .fm-tree-indent{margin-left:1rem;}
+            .fm-folder-heading svg{width:18px;height:18px;flex-shrink:0;}
+            .fm-folder-count{font-size:0.6rem;font-weight:400;color:var(--fm-text-secondary);margin-left:auto;}
 
-            /* FILE TABLE */
-            .fm-table-container{
-                background:var(--fm-card);border:1px solid var(--fm-border);
-                border-radius:var(--card-radius);overflow:hidden;
+            /* SUBFOLDER */
+            .fm-subfolder{
+                margin:0.3rem 0 0.3rem 0.5rem;padding:0.3rem 0.5rem;
+                background:#fff;border:1px solid var(--fm-border);border-radius:3px;
             }
-            .fm-table-header{
-                display:grid;grid-template-columns:1fr 100px 90px 100px;
-                background:#e9ecef;border-bottom:2px solid var(--fm-border);
-                font-size:0.7rem;font-weight:600;color:var(--fm-text-secondary);
+            .fm-subfolder summary{
+                cursor:pointer;list-style:none;display:flex;align-items:center;gap:0.3rem;
+                font-size:0.75rem;font-weight:500;color:var(--fm-text);
             }
-            .fm-table-header span{padding:0.5rem;border-right:1px solid var(--fm-border);}
-            .fm-table-header span:last-child{border-right:none;}
+            .fm-subfolder summary::-webkit-details-marker{display:none;}
+            .fm-subfolder summary:hover{color:var(--fm-accent);}
+            .fm-subfolder details[open] > summary{color:var(--fm-accent);}
+            .fm-subfolder .sf-arrow{
+                width:10px;height:10px;transition:transform 0.15s;
+                display:inline-flex;align-items:center;justify-content:center;
+                font-size:0.55rem;color:var(--fm-text-secondary);
+            }
+            .fm-subfolder details[open] > summary .sf-arrow{transform:rotate(90deg);}
 
-            .fm-table-row{
-                display:grid;grid-template-columns:1fr 100px 90px 100px;
-                border-bottom:1px solid var(--fm-border);font-size:var(--font-row);
-                transition:background 0.1s;
+            /* FILE ROW */
+            .fm-file-list{padding:0.3rem 0 0 1.2rem;}
+            .fm-file-row{
+                display:flex;align-items:center;gap:0.4rem;padding:0.25rem 0.3rem;
+                border-radius:2px;transition:background 0.1s;
             }
-            .fm-table-row:hover{background:#f1f3f5;}
-            .fm-table-row:last-child{border-bottom:none;}
-            .fm-table-row span{padding:0.5rem;display:flex;align-items:center;gap:0.4rem;border-right:1px solid var(--fm-border);overflow:hidden;}
-            .fm-table-row span:last-child{border-right:none;}
-            .fm-table-row a{color:var(--fm-accent);text-decoration:none;display:flex;align-items:center;gap:0.4rem;}
-            .fm-table-row a:hover{text-decoration:underline;color:var(--fm-accent-hover);}
-            .fm-file-icon{width:18px;height:18px;flex-shrink:0;}
+            .fm-file-row:hover{background:#e9ecef;}
+            .fm-file-row svg{width:14px;height:14px;flex-shrink:0;}
+            .fm-file-row a{
+                font-size:0.7rem;color:var(--fm-accent);text-decoration:none;flex:1;
+                overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+            }
+            .fm-file-row a:hover{text-decoration:underline;color:var(--fm-accent-hover);}
+            .fm-file-size{
+                font-size:0.6rem;color:var(--fm-text-secondary);flex-shrink:0;
+            }
 
             /* STATUS BAR */
             .fm-status-bar{
@@ -569,15 +576,6 @@ permalink: /atikah/
                 border:1px solid var(--fm-border);border-radius:var(--card-radius);
                 margin-top:0.75rem;font-size:0.65rem;color:var(--fm-text-secondary);
             }
-
-            /* VIDEO SECTION */
-            .fm-video-section{
-                background:var(--fm-card);border:1px solid var(--fm-border);
-                border-radius:var(--card-radius);padding:var(--card-padding);margin-top:1rem;
-            }
-            .fm-video-title{font-size:0.8rem;font-weight:600;color:var(--fm-text);margin-bottom:0.4rem;}
-            .fm-video-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:3px;}
-            .fm-video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
 
             /* FOOTER */
             .fm-footer{
@@ -589,11 +587,9 @@ permalink: /atikah/
             .fm-footer-links a:hover{text-decoration:underline;}
 
             @media(max-width:768px){
-                .fm-two-col{grid-template-columns:1fr;}
-                .fm-tree{display:none;}
-                .fm-table-header{grid-template-columns:1fr 70px 60px 80px;}
-                .fm-table-row{grid-template-columns:1fr 70px 60px 80px;}
-                .fm-table-header span,.fm-table-row span{font-size:0.65rem;padding:0.35rem;}
+                .fm-container{padding:0.5rem;}
+                .fm-folder-section{padding:0.4rem;}
+                .fm-file-row a{font-size:0.65rem;}
             }
         </style>
 
@@ -602,6 +598,12 @@ permalink: /atikah/
             <div class="fm-address-bar">
                 <span class="fm-address-label">Address:</span>
                 <div class="fm-address-path" id="fm-address-path"></div>
+            </div>
+
+            <!-- TOC -->
+            <div class="fm-toc">
+                <div class="fm-toc-title">Jump to Folder:</div>
+                <div class="fm-toc-list" id="fm-toc-list"></div>
             </div>
 
             <!-- TOOLBAR -->
@@ -613,54 +615,19 @@ permalink: /atikah/
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg> Refresh
                 </a>
                 <span class="fm-toolbar-sep"></span>
-                <a class="fm-toolbar-btn" id="fm-btn-new" title="New Folder">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> New Folder
+                <a class="fm-toolbar-btn" id="fm-btn-download-all" title="Download All">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download All
                 </a>
-                <a class="fm-toolbar-btn" id="fm-btn-download" title="Download">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download
+                <a class="fm-toolbar-btn" id="fm-btn-view-all" title="View All">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> View All
                 </a>
-                <span class="fm-toolbar-sep"></span>
-                <a class="fm-toolbar-btn" id="fm-btn-view" title="View">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> View
-                </a>
-                <div class="fm-toolbar-search" id="fm-search-box">
-                    <input type="text" id="fm-search-input" placeholder="Search files...">
-                    <button id="fm-search-btn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    </button>
-                </div>
             </div>
 
-            <!-- TWO COL -->
-            <div class="fm-two-col">
-                <!-- FOLDER TREE -->
-                <div class="fm-tree" id="fm-tree">
-                    <div class="fm-tree-title">Folders</div>
-                    <div id="fm-tree-list"></div>
-                </div>
+            <!-- FOLDER SECTIONS -->
+            <div id="fm-folders-container"></div>
 
-                <!-- FILE TABLE -->
-                <div>
-                    <div class="fm-table-container">
-                        <div class="fm-table-header">
-                            <span>Name</span>
-                            <span>Type</span>
-                            <span>Size</span>
-                            <span>Modified</span>
-                        </div>
-                        <div id="fm-table-body"></div>
-                    </div>
-
-                    <!-- STATUS BAR -->
-                    <div class="fm-status-bar" id="fm-status-bar"></div>
-
-                    <!-- VIDEO -->
-                    <div class="fm-video-section" id="fm-video-section">
-                        <div class="fm-video-title" id="fm-video-title"></div>
-                        <div class="fm-video-embed" id="fm-video-embed"></div>
-                    </div>
-                </div>
-            </div>
+            <!-- STATUS BAR -->
+            <div class="fm-status-bar" id="fm-status-bar"></div>
 
             <!-- FOOTER -->
             <div class="fm-footer">
@@ -675,7 +642,7 @@ permalink: /atikah/
 </div>
 
 <!-- ============================================ -->
-<!-- JAVASCRIPT FINAL - FILE MANAGER STYLE        -->
+<!-- JAVASCRIPT FINAL - FILE MANAGER              -->
 <!-- ============================================ -->
 <script>
 (function() {
@@ -788,7 +755,6 @@ permalink: /atikah/
 
     var accentColor = hslToHex(hue, 70, 50);
 
-    // Update accent
     var fmContainer = document.querySelector(".fm-container");
     if (fmContainer) {
         fmContainer.style.setProperty("--fm-accent", accentColor);
@@ -796,23 +762,21 @@ permalink: /atikah/
     }
 
     // SVG Icons
-    function svgFolderIcon() {
-        return "<svg class=\"fm-file-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"" + accentColor + "\" stroke-width=\"1.5\"><path d=\"M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z\"/></svg>";
+    function svgFolderIcon(size) {
+        var s = size || 18;
+        return "<svg width=\"" + s + "\" height=\"" + s + "\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"" + accentColor + "\" stroke-width=\"1.5\"><path d=\"M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z\"/></svg>";
     }
-    function svgVideoIcon() {
-        return "<svg class=\"fm-file-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc3545\" stroke-width=\"1.5\"><rect x=\"2\" y=\"3\" width=\"20\" height=\"14\" rx=\"2\"/><polygon points=\"10 8 16 12 10 16\" fill=\"#dc3545\" stroke=\"none\"/></svg>";
+    function svgFileVideo() {
+        return "<svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#dc3545\" stroke-width=\"1.5\"><rect x=\"2\" y=\"3\" width=\"20\" height=\"14\" rx=\"2\"/><polygon points=\"10 8 16 12 10 16\" fill=\"#dc3545\" stroke=\"none\"/></svg>";
     }
-    function svgImageIcon() {
-        return "<svg class=\"fm-file-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#198754\" stroke-width=\"1.5\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/><polyline points=\"21 15 16 10 5 21\"/></svg>";
+    function svgFileImage() {
+        return "<svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#198754\" stroke-width=\"1.5\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/><polyline points=\"21 15 16 10 5 21\"/></svg>";
     }
-    function svgArchiveIcon() {
-        return "<svg class=\"fm-file-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fd7e14\" stroke-width=\"1.5\"><path d=\"M21 8v13H3V8\"/><path d=\"M1 3h22v5H1z\"/><line x1=\"10\" y1=\"12\" x2=\"14\" y2=\"12\"/></svg>";
+    function svgFileArchive() {
+        return "<svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fd7e14\" stroke-width=\"1.5\"><path d=\"M21 8v13H3V8\"/><path d=\"M1 3h22v5H1z\"/><line x1=\"10\" y1=\"12\" x2=\"14\" y2=\"12\"/></svg>";
     }
-    function svgAudioIcon() {
-        return "<svg class=\"fm-file-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#6f42c1\" stroke-width=\"1.5\"><path d=\"M9 18V5l12-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"18\" cy=\"16\" r=\"3\"/></svg>";
-    }
-    function svgDocIcon() {
-        return "<svg class=\"fm-file-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#0d6efd\" stroke-width=\"1.5\"><path d=\"M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z\"/><polyline points=\"13 2 13 9 20 9\"/></svg>";
+    function svgFileAudio() {
+        return "<svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#6f42c1\" stroke-width=\"1.5\"><path d=\"M9 18V5l12-2v13\"/><circle cx=\"6\" cy=\"18\" r=\"3\"/><circle cx=\"18\" cy=\"16\" r=\"3\"/></svg>";
     }
 
     // Ekstrak display name
@@ -851,7 +815,6 @@ permalink: /atikah/
         ], combinedSeed);
         metaKeywords.content = leakKW.slice(0, 6).join(", ");
     }
-
     var metaNews = document.getElementById("dynamic-news-keywords");
     if (metaNews) {
         metaNews.content = displayLower + ", file manager, directory, files, archive";
@@ -914,172 +877,170 @@ permalink: /atikah/
     }
     document.getElementById("fm-address-path").innerHTML = addressHtml;
 
-    // TOOLBAR BUTTONS
+    // TOOLBAR
     document.getElementById("fm-btn-back").href = "/atikah/";
     document.getElementById("fm-btn-refresh").href = location.href;
-    var newFolderQuery = displayLower + " new folder";
-    document.getElementById("fm-btn-new").href = "/" + getPath(combinedSeed, 0) + "/?q=" + encodeURIComponent(newFolderQuery);
-    var downloadQuery = "download " + displayLower + " files";
-    document.getElementById("fm-btn-download").href = "/" + getPath(combinedSeed, 1) + "/?q=" + encodeURIComponent(downloadQuery);
-    var viewQuery = "view " + displayLower + " content";
-    document.getElementById("fm-btn-view").href = "/" + getPath(combinedSeed, 2) + "/?q=" + encodeURIComponent(viewQuery);
+    document.getElementById("fm-btn-download-all").href = "/" + getPath(combinedSeed, 1) + "/?q=" + encodeURIComponent("download " + displayLower + " all files");
+    document.getElementById("fm-btn-view-all").href = "/" + getPath(combinedSeed, 2) + "/?q=" + encodeURIComponent("view " + displayLower + " all content");
 
-    // SEARCH
-    document.getElementById("fm-search-btn").addEventListener("click", function() {
-        var searchVal = document.getElementById("fm-search-input").value.trim();
-        if (searchVal) {
-            window.location.href = "/" + getPath(combinedSeed, 3) + "/?q=" + encodeURIComponent(searchVal);
-        }
-    });
-
-    // FOLDER TREE
-    var treeFolders = shuffleArray([
-        { name: displayName + " Leaked Videos", query: displayLower + "+leaked+videos" },
-        { name: displayName + " Leaked Photos", query: displayLower + "+leaked+photos" },
-        { name: displayName + " Exclusive Media", query: displayLower + "+exclusive+media" },
-        { name: displayName + " Full Collection", query: displayLower + "+full+collection" },
-        { name: displayName + " Premium Archive", query: displayLower + "+premium+archive" },
-        { name: displayName + " Private Content", query: displayLower + "+private+content" },
-        { name: displayName + " Hidden Files", query: displayLower + "+hidden+files" },
-        { name: displayName + " Complete Set", query: displayLower + "+complete+set" }
+    /*
+     * ============================================
+     * FOLDER DATA (5 FOLDER UTAMA)
+     * ============================================
+     */
+    var mainFolderNames = shuffleArray([
+        displayName + " Leaked Videos",
+        displayName + " Leaked Photos",
+        displayName + " Exclusive Media",
+        displayName + " Full Collection",
+        displayName + " Premium Archive"
     ], combinedSeed);
 
-    var treeHtml = "";
-    for (var tr = 0; tr < 6; tr++) {
-        var tf = treeFolders[tr];
-        treeHtml += "<div class=\"fm-tree-item\">" + svgFolderIcon() + " <a href=\"/" + getPath(combinedSeed, 900 + tr) + "/?q=" + encodeURIComponent(tf.query) + "\">" + tf.name + "</a></div>";
-        if (tr < 3) {
-            var subFolder = shuffleArray(["videos-01", "photos-01", "media-01", "archive-01"], combinedSeed)[0];
-            treeHtml += "<div class=\"fm-tree-item fm-tree-indent\">" + svgFolderIcon() + " <a href=\"/" + getPath(combinedSeed, 950 + tr) + "/?q=" + encodeURIComponent(tf.query + "+" + subFolder) + "\">" + formatName(subFolder) + "</a></div>";
-        }
-    }
-    document.getElementById("fm-tree-list").innerHTML = treeHtml;
-
-    // FILE TABLE
-    var filePool = shuffleArray([
-        { name: displayLower + "-full-pack", type: "Video File", icon: svgVideoIcon() },
-        { name: displayLower + "-gallery", type: "Image File", icon: svgImageIcon() },
-        { name: displayLower + "-mega-collection", type: "Archive", icon: svgArchiveIcon() },
-        { name: displayLower + "-private-media", type: "Video File", icon: svgVideoIcon() },
-        { name: displayLower + "-exclusive-set", type: "Image File", icon: svgImageIcon() },
-        { name: displayLower + "-audio-leak", type: "Audio File", icon: svgAudioIcon() },
-        { name: displayLower + "-complete-archive", type: "Archive", icon: svgArchiveIcon() },
-        { name: displayLower + "-hidden-content", type: "Document", icon: svgDocIcon() },
-        { name: displayLower + "-viral-clips", type: "Video File", icon: svgVideoIcon() },
-        { name: displayLower + "-premium-pack", type: "Archive", icon: svgArchiveIcon() },
-        { name: displayLower + "-rare-photos", type: "Image File", icon: svgImageIcon() },
-        { name: displayLower + "-secret-media", type: "Video File", icon: svgVideoIcon() }
+    var mainFolderSlugs = shuffleArray([
+        "leaked-videos", "leaked-photos", "exclusive-media", "full-collection", "premium-archive"
     ], combinedSeed);
 
-    var sizePool = shuffleArray(["Full Set", "Complete", "Mega Pack", "All Files", "HD", "4K", "Pro", "VIP"], combinedSeed);
-    var timePool = shuffleArray(["Recently", "Today", "Fresh", "New", "Updated", "Latest", "Active", "Just now"], combinedSeed);
+    var subFolderNames = shuffleArray([
+        ["Private Clips", "Exclusive Footage", "Behind Scenes", "Raw Media", "HD Collection"],
+        ["Gallery Collection", "Selfie Archive", "Candid Photos", "Studio Shots", "Digital Set"],
+        ["VIP Content", "Premium Access", "Secret Files", "Elite Media", "Pro Pack"],
+        ["Complete Archive", "Mega Collection", "Full Dump", "Entire Set", "All Files"],
+        ["Hidden Gems", "Rare Finds", "Special Edition", "Limited Access", "Bonus Content"]
+    ], combinedSeed);
 
-    // Folder rows
-    var folderNames = shuffleArray(["leaked-videos", "leaked-photos", "exclusive-media", "full-collection", "premium-archive", "private-content", "hidden-files", "complete-set"], combinedSeed).slice(0, 4);
-    var tableHtml = "";
-    for (var fd = 0; fd < folderNames.length; fd++) {
-        var fPath = getPath(combinedSeed, 1000 + fd);
-        tableHtml += "<div class=\"fm-table-row\">";
-        tableHtml += "<span>" + svgFolderIcon() + " <a href=\"/" + fPath + "/?q=" + encodeURIComponent(displayLower + "+" + folderNames[fd]) + "\">" + formatName(folderNames[fd]) + "/</a></span>";
-        tableHtml += "<span>Folder</span>";
-        tableHtml += "<span>" + pickFromArray(shuffleArray(["12 items","8 items","5 items","15 items","20 items","10 items"], combinedSeed), combinedSeed, fd) + "</span>";
-        tableHtml += "<span>" + pickFromArray(timePool, combinedSeed, fd) + "</span>";
-        tableHtml += "</div>";
+    var fileTypes = shuffleArray([
+        { ext: ".mp4", icon: svgFileVideo() },
+        { ext: ".jpg", icon: svgFileImage() },
+        { ext: ".zip", icon: svgFileArchive() },
+        { ext: ".mp3", icon: svgFileAudio() },
+        { ext: ".mkv", icon: svgFileVideo() },
+        { ext: ".png", icon: svgFileImage() }
+    ], combinedSeed);
+
+    var fileSizeLabels = shuffleArray(["Full HD", "4K", "HD", "Complete", "Pro", "Premium", "Raw", "Original", "High Quality", "Standard"], combinedSeed);
+
+    /*
+     * ============================================
+     * GENERATE FOLDERS HTML
+     * ============================================
+     */
+    var foldersHtml = "";
+    var tocHtml = "";
+    var totalFiles = 0;
+    var totalFolders = 0;
+    var allItemsForSchema = [];
+
+    for (var mf = 0; mf < 5; mf++) {
+        var mainFolderName = mainFolderNames[mf];
+        var mainFolderSlug = mainFolderSlugs[mf];
+        var mainFolderId = "folder-" + mf;
+        var mainFolderPath = getPath(combinedSeed, 500 + mf);
+        var mainSubNames = subFolderNames[mf];
+
+        // TOC item
+        tocHtml += "<a href=\"#" + mainFolderId + "\">" + mainFolderName + "</a>";
+
+        // Subfolder count
+        var subCount = 2 + (combinedSeed % 3); // 2-4 subfolder
+        var mainFileCount = 0;
+
+        foldersHtml += "<div class=\"fm-folder-section\" id=\"" + mainFolderId + "\">";
+        foldersHtml += "<div class=\"fm-folder-heading\">" + svgFolderIcon(18) + " " + mainFolderName;
+        foldersHtml += "<span class=\"fm-folder-count\" id=\"count-" + mainFolderId + "\"></span>";
+        foldersHtml += "</div>";
+
+        // Subfolder
+        for (var sf = 0; sf < subCount; sf++) {
+            var subName = mainSubNames[sf];
+            var subSlug = mainFolderSlug + "-" + subName.toLowerCase().replace(/ /g, "-");
+            var subPath = getPath(combinedSeed, 600 + mf * 10 + sf);
+            totalFolders++;
+
+            foldersHtml += "<details class=\"fm-subfolder\" open>";
+            foldersHtml += "<summary><span class=\"sf-arrow\">&#9654;</span> " + svgFolderIcon(14) + " " + subName + "</summary>";
+            foldersHtml += "<div class=\"fm-file-list\">";
+
+            // File dalam subfolder (3-5 file)
+            var filesInSub = 3 + (combinedSeed + mf * 7 + sf * 3) % 3; // 3-5
+            for (var fl = 0; fl < filesInSub; fl++) {
+                var fileIdx = mf * 100 + sf * 10 + fl;
+                var ft = fileTypes[(fileIdx) % fileTypes.length];
+                var fSize = fileSizeLabels[(fileIdx) % fileSizeLabels.length];
+                var fNum = (fl + 1);
+                var fNumStr = (fNum < 10) ? "0" + fNum : "" + fNum;
+                var fName = displayLower + "-" + subSlug + "-" + fNumStr + ft.ext;
+                var fPath = getPath(combinedSeed, 1000 + fileIdx);
+                var fQuery = normalizeQuery("download " + displayLower + " " + subSlug + " " + fNumStr);
+
+                foldersHtml += "<div class=\"fm-file-row\">";
+                foldersHtml += ft.icon;
+                foldersHtml += "<a href=\"/" + fPath + "/?q=" + encodeURIComponent(fQuery) + "\">" + fName + "</a>";
+                foldersHtml += "<span class=\"fm-file-size\">" + fSize + "</span>";
+                foldersHtml += "</div>";
+
+                allItemsForSchema.push({ "position": allItemsForSchema.length + 1, "name": fName, "url": location.origin + "/" + fPath + "/?q=" + encodeURIComponent(fQuery) });
+                totalFiles++;
+                mainFileCount++;
+            }
+
+            foldersHtml += "</div>";
+            foldersHtml += "</details>";
+        }
+
+        // File langsung di folder utama (1-2 file)
+        var directFiles = 1 + (combinedSeed + mf) % 2; // 1-2
+        for (var df = 0; df < directFiles; df++) {
+            var dFileIdx = mf * 200 + df;
+            var dFt = fileTypes[(dFileIdx + 5) % fileTypes.length];
+            var dFSize = fileSizeLabels[(dFileIdx + 5) % fileSizeLabels.length];
+            var dFName = displayLower + "-" + mainFolderSlug + "-full" + dFt.ext;
+            var dFPath = getPath(combinedSeed, 2000 + dFileIdx);
+            var dFQuery = normalizeQuery("download " + displayLower + " " + mainFolderSlug + " full");
+
+            foldersHtml += "<div class=\"fm-file-row\" style=\"padding-left:0.3rem;\">";
+            foldersHtml += dFt.icon;
+            foldersHtml += "<a href=\"/" + dFPath + "/?q=" + encodeURIComponent(dFQuery) + "\">" + dFName + "</a>";
+            foldersHtml += "<span class=\"fm-file-size\">" + dFSize + "</span>";
+            foldersHtml += "</div>";
+
+            allItemsForSchema.push({ "position": allItemsForSchema.length + 1, "name": dFName, "url": location.origin + "/" + dFPath + "/?q=" + encodeURIComponent(dFQuery) });
+            totalFiles++;
+            mainFileCount++;
+        }
+
+        foldersHtml += "</div>";
+
+        // Update folder count
+        setTimeout(function(id, count) {
+            var el = document.getElementById("count-" + id);
+            if (el) el.innerText = "(" + count + " files)";
+        }, 0, mainFolderId, mainFileCount);
     }
 
-    // File rows
-    var fileCount = 8 + (combinedSeed % 5);
-    var fileItemsForSchema = [];
-    for (var fl = 0; fl < fileCount; fl++) {
-        var file = pickFromArray(filePool, combinedSeed, fl);
-        var fileSize = pickFromArray(sizePool, combinedSeed, fl + 10);
-        var fileTime = pickFromArray(timePool, combinedSeed, fl + 20);
-        var filePath = getPath(combinedSeed, 2000 + fl);
-        var fileQuery = normalizeQuery("download " + file.name);
-        var fileUrl = "/" + filePath + "/?q=" + encodeURIComponent(fileQuery);
+    document.getElementById("fm-folders-container").innerHTML = foldersHtml;
+    document.getElementById("fm-toc-list").innerHTML = tocHtml;
 
-        fileItemsForSchema.push({ "position": fl + 1, "name": file.name, "url": location.origin + fileUrl });
-
-        tableHtml += "<div class=\"fm-table-row\">";
-        tableHtml += "<span>" + file.icon + " <a href=\"" + fileUrl + "\">" + formatName(file.name) + "</a></span>";
-        tableHtml += "<span>" + file.type + "</span>";
-        tableHtml += "<span>" + fileSize + "</span>";
-        tableHtml += "<span>" + fileTime + "</span>";
-        tableHtml += "</div>";
-    }
-    document.getElementById("fm-table-body").innerHTML = tableHtml;
+    // STATUS BAR
+    document.getElementById("fm-status-bar").innerHTML = "<span>" + (totalFiles + totalFolders) + " items</span><span>" + totalFolders + " subfolders, " + totalFiles + " files</span>";
 
     // ItemList Schema
     var itemListSchema = {
         "@context": "https://schema.org",
         "@type": "ItemList",
         "name": displayName + " Files Directory",
-        "numberOfItems": folderNames.length + fileCount,
-        "itemListElement": fileItemsForSchema
+        "numberOfItems": allItemsForSchema.length,
+        "itemListElement": allItemsForSchema.slice(0, 50)
     };
     var itemListScript = document.createElement("script");
     itemListScript.type = "application/ld+json";
     itemListScript.textContent = JSON.stringify(itemListSchema);
     document.head.appendChild(itemListScript);
 
-    // STATUS BAR
-    var totalItems = folderNames.length + fileCount;
-    document.getElementById("fm-status-bar").innerHTML = "<span>" + totalItems + " items</span><span>" + folderNames.length + " folders, " + fileCount + " files</span>";
-
-    // VIDEO
-    var youtubeVideos = [
-        { id: "O1l2S0bzcko" },{ id: "oiv_wy9p3ps" },{ id: "fUNnD6VSdkA" },{ id: "E5KgrADNaHU" },
-        { id: "YWEZWM7_SzE" },{ id: "DfE-5eQ_EtM" },{ id: "2RhstWCXlto" },{ id: "40c9YI_5-p0" },
-        { id: "0svS6hLJ4G4" },{ id: "SeDq4De_DAE" },{ id: "Ty7AxYfbrdk" },{ id: "W5_e0q7iV1U" },
-        { id: "G_OILgiU8oI" },{ id: "LeyWAsUF71A" },{ id: "pflOqeoDK8Q" },{ id: "ZxTvOSZSMR8" },
-        { id: "T4GlXodmK6g" },{ id: "_qro0KPFYxE" },{ id: "mxRm4CmH3wE" }
-    ];
-    var selectedVideo = pickFromArray(youtubeVideos, combinedSeed, 0);
-    var videoId = selectedVideo.id;
-    var videoLabel = pickFromArray(shuffleArray([
-        "Watch " + displayLower + " Leaked Video",
-        displayLower + " File Preview",
-        "Stream " + displayLower + " Content",
-        displayLower + " Media Player"
-    ], combinedSeed), combinedSeed, 0);
-
-    document.getElementById("fm-video-title").innerText = videoLabel;
-    document.getElementById("fm-video-embed").innerHTML = "<iframe src=\"https://www.youtube.com/embed/" + videoId + "\" allowfullscreen></iframe>";
-
-    var videoSchema = {
-        "@context": "https://schema.org",
-        "@type": "VideoObject",
-        "name": videoLabel,
-        "description": videoLabel + " on " + fullName,
-        "thumbnailUrl": "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg",
-        "embedUrl": "https://www.youtube.com/embed/" + videoId,
-        "contentUrl": "https://www.youtube.com/watch?v=" + videoId,
-        "uploadDate": "2025-11-01T00:00:00+07:00",
-        "duration": "PT1M30S"
-    };
-    var videoScript = document.createElement("script");
-    videoScript.type = "application/ld+json";
-    videoScript.textContent = JSON.stringify(videoSchema);
-    document.head.appendChild(videoScript);
-
-    var imageSchema = {
-        "@context": "https://schema.org",
-        "@type": "ImageObject",
-        "name": displayName + " File Thumbnail",
-        "contentUrl": "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg",
-        "thumbnailUrl": "https://img.youtube.com/vi/" + videoId + "/mqdefault.jpg"
-    };
-    var imageScript = document.createElement("script");
-    imageScript.type = "application/ld+json";
-    imageScript.textContent = JSON.stringify(imageSchema);
-    document.head.appendChild(imageScript);
-
     // FOOTER
     var footerTexts = shuffleArray([
         fullName + " File Manager", fullName + " Directory", fullName + " Storage"
     ], domainHash);
     var footerStatuses = shuffleArray(["Online","Active","Available"], domainHash);
-
     document.getElementById("fm-footer-text").innerText = footerTexts[0];
     document.getElementById("fm-footer-status").innerText = footerStatuses[0];
 
@@ -1096,7 +1057,7 @@ permalink: /atikah/
 })();
 </script>
 
-{% include /kw/01.html %}
+
 {% include /ads/gobloggugel/sosmed.html %}
 </div>
 </body>
