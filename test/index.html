@@ -280,18 +280,24 @@ layout: null
         .latest-card h3 a:hover{color:var(--accent);}
         .latest-meta{font-size:0.65rem;color:#888;}
 
-        /* POPULAR */
-        .popular-list{display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;}
-        .popular-item{display:flex;align-items:center;gap:1rem;background:#fff;border:1px solid #e5e5e5;border-radius:var(--card-radius);padding:0.75rem 1rem;transition:all 0.15s ease;box-shadow:var(--card-shadow);}
-        .popular-item:hover{box-shadow:0 4px 12px rgba(0,0,0,0.08);}
-        .popular-number{font-size:1.5rem;font-weight:700;color:var(--accent);width:35px;text-align:center;flex-shrink:0;}
-        .popular-img{width:80px;aspect-ratio:16/9;flex-shrink:0;border-radius:4px;overflow:hidden;}
-        .popular-img img{width:100%;height:100%;object-fit:cover;}
-        .popular-content{flex:1;}
-        .popular-content h3{font-size:0.85rem;margin-bottom:0.25rem;}
-        .popular-content h3 a{color:#111;text-decoration:none;}
-        .popular-content h3 a:hover{color:var(--accent);}
-        .popular-content p{font-size:0.7rem;color:#888;}
+        /* POPULAR - perbaikan responsive */
+.popular-list{display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;}
+.popular-item{display:flex;align-items:flex-start;gap:0.75rem;background:#fff;border:1px solid #e5e5e5;border-radius:var(--card-radius);padding:0.75rem;transition:all 0.15s ease;box-shadow:var(--card-shadow);word-wrap:break-word;overflow-wrap:break-word;}
+.popular-item:hover{box-shadow:0 4px 12px rgba(0,0,0,0.08);}
+.popular-number{font-size:1.5rem;font-weight:700;color:var(--accent);min-width:35px;text-align:center;flex-shrink:0;line-height:1;}
+.popular-img{width:80px;aspect-ratio:16/9;flex-shrink:0;border-radius:4px;overflow:hidden;}
+.popular-img img{width:100%;height:100%;object-fit:cover;}
+.popular-content{flex:1;min-width:0;}
+.popular-content h3{font-size:0.85rem;margin-bottom:0.25rem;word-break:break-word;}
+.popular-content h3 a{color:#111;text-decoration:none;}
+.popular-content h3 a:hover{color:var(--accent);}
+.popular-content p{font-size:0.7rem;color:#888;word-break:break-word;}
+
+@media(max-width:480px){
+    .popular-item{flex-direction:column;align-items:flex-start;gap:0.5rem;}
+    .popular-number{font-size:1.2rem;min-width:auto;}
+    .popular-img{width:100%;aspect-ratio:16/9;}
+}
 
         /* COUNTRY LINKS */
         .country-links{display:grid;gap:0.4rem;}
@@ -404,10 +410,6 @@ layout: null
                 <div class="popular-content">
                     <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
                     <p>{{ post.description }}</p>
-                            {% assign before_svg = post.content | split: '<p>' | first %}
-  <div class="excerpt spo">
-    {{ before_svg }}
-  </div>
                 </div>
             </div>
             {% endfor %}
