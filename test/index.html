@@ -171,7 +171,6 @@ layout: null
         const MAX_POSTS_PER_PAGE = 24;
         const DEFAULT_LABEL = '';
         
-        // Shuffle array pakai seed (konsisten per domain)
         function seededShuffle(arr, seed){
             const a = [...arr];
             let s = seed;
@@ -183,7 +182,6 @@ layout: null
             return a;
         }
         
-        // Hash domain jadi seed
         function hashDomain(h){
             let hash = 0;
             for(let i = 0; i < h.length; i++){
@@ -205,11 +203,10 @@ layout: null
         $('canonicalUrl').href=location.href;
         
         function hd(u){return u&&u.includes('googleusercontent.com')?u.replace(/\/s\d+(-c)?\//,'/s1600/'):u}
-        function strip(h){if(!h)return'';const d=document.createElement('div');d.innerHTML=h;return(d.textContent||'').replace(/\s+/g,' ').trim()}
         function fd(d){try{return new Date(d).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}catch(e){return d}}
         function altText(t,c){const p=[t];if(c&&c.length)p.push(c.join(', '));return p.filter(Boolean).join(' - ')}
         
-        function il(u, bid){
+        function il(u){
             if(!u)return'#';
             try{const ur=new URL(u);const slug=ur.pathname.split('/').pop().replace('.html','');const pp=new URLSearchParams();pp.set('p',slug);return'/?'+pp.toString();}catch(e){}
             return u;
@@ -272,7 +269,7 @@ layout: null
             const images=[];
             allImages.forEach(img=>{
                 if(img.src&&!img.src.includes('data:image/svg+xml')){
-                    images.push({src:img.src,alt:img.alt||'Photo'});
+                    images.push({src:img.src, alt:img.alt||'Photo'});
                     img.style.cursor='pointer';
                     const idx=images.length-1;
                     img.onclick=function(e){e.preventDefault();openLightbox(images,idx);};
@@ -281,19 +278,53 @@ layout: null
         }
         
         // ============================================
+        // RENDER CARD
+        // ============================================
+        function renderCard(e){
+            const t=e.title?.$t||'Untitled';
+            const link=il((e.link||[]).find(l=>l.rel==='alternate')?.href||'#');
+            const date=fd(e.published?.$t);
+            const content=e.content?.$t||e.summary?.$t||'';
+            const thumb=hd(e.media$thumbnail?.url)||(function(c){
+                if(!c)return null;
+                const d=document.createElement('div');d.innerHTML=c;
+                const i=d.querySelector('img');return i?hd(i.src):null;
+            })(content);
+            const cats=(e.category||[]).map(c=>c.term).filter(Boolean);
+            const imgAlt=altText(t,cats);
+            
+            let html='<a href="'+link+'" class="post-card">';
+            if(thumb){
+                html+='<img class="post-card-img" src="'+thumb+'" alt="'+imgAlt+'" loading="lazy" onerror="this.style.display=\'none\'">';
+            } else {
+                html+='<div style="aspect-ratio:2/3;background:#1a1a1a;display:flex;align-items:center;justify-content:center;color:#555;font-size:12px">No Image</div>';
+            }
+            html+='<div class="post-card-info"><span class="post-card-title">'+t+'</span>';
+            if(date)html+='<div class="post-card-meta">'+date+'</div>';
+            if(cats.length)html+=cats.slice(0,2).map(c=>'<a href="/?label='+c+'" class="post-card-label">'+c+'</a>').join('');
+            html+='</div></a>';
+            return html;
+        }
+        
+        // ============================================
         // MULTI BLOG FETCH
         // ============================================
-        function fetchAllBlogs(callback, useLabel, pageStart, pageMax, useSlug){
+        function fetchAllBlogs(callback, useLabel, pageStart, pageMax){
             const allPosts = [];
             let completed = 0;
             const totalBlogs = BLOG_IDS.length;
+            
+            if(totalBlogs === 0){
+                callback([], 0);
+                return;
+            }
             
             BLOG_IDS.forEach((bid, idx) => {
                 const base = 'https://www.blogger.com/feeds/'+bid+'/posts/default';
                 const fp = new URLSearchParams();
                 fp.set('alt','json-in-script');
                 fp.set('callback','mb'+idx);
-                fp.set('max-results', useSlug ? 3 : pageMax);
+                fp.set('max-results', pageMax);
                 fp.set('start-index', pageStart);
                 if(useLabel) fp.set('category', useLabel);
                 
@@ -301,15 +332,10 @@ layout: null
                     const feed = data.feed;
                     if(feed && feed.entry){
                         const entries = Array.isArray(feed.entry) ? feed.entry : [feed.entry];
-                        entries.forEach(e => {
-                            e._blogId = bid;
-                            e._blogIndex = idx;
-                        });
                         allPosts.push(...entries);
                     }
                     completed++;
                     if(completed >= totalBlogs){
-                        // Acak hasil pakai seed domain
                         const shuffled = seededShuffle(allPosts, seed + pageStart);
                         callback(shuffled, allPosts.length);
                     }
@@ -318,6 +344,13 @@ layout: null
                 const s = document.createElement('script');
                 s.src = base + '?' + fp.toString();
                 s.async = true;
+                s.onerror = function(){
+                    completed++;
+                    if(completed >= totalBlogs){
+                        const shuffled = seededShuffle(allPosts, seed + pageStart);
+                        callback(shuffled, allPosts.length);
+                    }
+                };
                 document.head.appendChild(s);
             });
         }
@@ -326,6 +359,8 @@ layout: null
         // POST SLUG MODE
         // ============================================
         if(POST_SLUG){
+            $('searchForm').style.display='none';
+            $('searchHint').style.display='none';
             $('backLink').style.display='inline-flex';
             if(document.referrer&&document.referrer.includes(host))$('backLink').href=document.referrer;
             $('pagination').style.display='none';
@@ -342,30 +377,16 @@ layout: null
             $('breadcrumb').innerHTML='<a href="/">Home</a> &rsaquo; <span>'+pageId+'</span>';
             
             const rs=Math.floor(Math.random()*20)+1;
-            fetchAllBlogs(function(posts, total){
+            fetchAllBlogs(function(posts){
                 const container=$('mainContent');
                 if(!posts.length){container.innerHTML='<p class="empty">No posts found.</p>';return;}
                 
                 const display=posts.slice(0,10);
                 let html='<p class="count-bar">Showing 10 random leaked photos from '+BLOG_IDS.length+' sources</p><div class="post-grid">';
-                
-                for(let i=0;i<display.length;i++){
-                    const e=display[i],t=e.title?.$t||'Untitled';
-                    const link=il((e.link||[]).find(l=>l.rel==='alternate')?.href||'#', e._blogId);
-                    const date=fd(e.published?.$t);
-                    const thumb=hd(e.media$thumbnail?.url)||(function(c){if(!c)return null;const d=document.createElement('div');d.innerHTML=c;const i=d.querySelector('img');return i?hd(i.src):null;})(e.content?.$t||e.summary?.$t||'');
-                    const cats=(e.category||[]).map(c=>c.term).filter(Boolean),imgAlt=altText(t,cats);
-                    html+='<a href="'+link+'" class="post-card">';
-                    if(thumb)html+='<img class="post-card-img" src="'+thumb+'" alt="'+imgAlt+'" loading="lazy" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 300%22><rect fill=%22%23111%22 width=%22200%22 height=%22300%22/><text fill=%22%23666%22 x=%22100%22 y=%22150%22 text-anchor=%22middle%22 font-size=%2214%22>No Image</text></svg>\'">';
-                    else html+='<div style="aspect-ratio:2/3;background:#1a1a1a;display:flex;align-items:center;justify-content:center;color:#555;font-size:12px">No Image</div>';
-                    html+='<div class="post-card-info"><span class="post-card-title">'+t+'</span>';
-                    if(date)html+='<div class="post-card-meta">'+date+'</div>';
-                    if(cats.length)html+=cats.slice(0,2).map(c=>'<a href="/?label='+c+'" class="post-card-label">'+c+'</a>').join('');
-                    html+='</div></a>';
-                }
+                for(let i=0;i<display.length;i++){html+=renderCard(display[i]);}
                 html+='</div>';container.innerHTML=html;
                 attachLightbox();
-            }, '', rs, 5, true);
+            }, '', rs, 4);
             return;
         }
         
@@ -391,33 +412,18 @@ layout: null
             const md=document.createElement('meta');md.name='description';md.content='Latest leaked photos, viral content, and exclusive updates on '+dn+'. New photos added regularly.';document.head.appendChild(md);
         }
         
-        // Fetch dari semua blog
         const perBlog = Math.ceil(MAX / BLOG_IDS.length);
-        fetchAllBlogs(function(posts, totalFromBlogs){
+        fetchAllBlogs(function(posts){
             const container=$('mainContent');
             if(!posts.length){container.innerHTML='<p class="empty">No posts found.</p>';return;}
             
             const display=posts.slice(0,MAX);
-            let html='<p class="count-bar">Showing '+Math.min(display.length,MAX)+' leaked photos from '+BLOG_IDS.length+' sources</p><div class="post-grid">';
-            
-            for(let i=0;i<display.length;i++){
-                const e=display[i],t=e.title?.$t||'Untitled';
-                const link=il((e.link||[]).find(l=>l.rel==='alternate')?.href||'#', e._blogId);
-                const date=fd(e.published?.$t);
-                const thumb=hd(e.media$thumbnail?.url)||(function(c){if(!c)return null;const d=document.createElement('div');d.innerHTML=c;const i=d.querySelector('img');return i?hd(i.src):null;})(e.content?.$t||e.summary?.$t||'');
-                const cats=(e.category||[]).map(c=>c.term).filter(Boolean),imgAlt=altText(t,cats);
-                html+='<a href="'+link+'" class="post-card">';
-                if(thumb)html+='<img class="post-card-img" src="'+thumb+'" alt="'+imgAlt+'" loading="lazy" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 300%22><rect fill=%22%23111%22 width=%22200%22 height=%22300%22/><text fill=%22%23666%22 x=%22100%22 y=%22150%22 text-anchor=%22middle%22 font-size=%2214%22>No Image</text></svg>\'">';
-                else html+='<div style="aspect-ratio:2/3;background:#1a1a1a;display:flex;align-items:center;justify-content:center;color:#555;font-size:12px">No Image</div>';
-                html+='<div class="post-card-info"><span class="post-card-title">'+t+'</span>';
-                if(date)html+='<div class="post-card-meta">'+date+'</div>';
-                if(cats.length)html+=cats.slice(0,2).map(c=>'<a href="/?label='+c+'" class="post-card-label">'+c+'</a>').join('');
-                html+='</div></a>';
-            }
+            let html='<p class="count-bar">Showing '+display.length+' leaked photos from '+BLOG_IDS.length+' sources</p><div class="post-grid">';
+            for(let i=0;i<display.length;i++){html+=renderCard(display[i]);}
             html+='</div>';container.innerHTML=html;
             attachLightbox();
             $('pagination').innerHTML='';
-        }, LABEL, START, perBlog, false);
+        }, LABEL, START, perBlog);
     })();
     </script>
 </body>
