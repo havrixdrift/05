@@ -144,7 +144,7 @@ permalink: /name/
         <input class="search-input" type="search" name="label" id="searchInput" placeholder="Search name + leaked..." aria-label="Search">
         <button class="search-btn" type="submit">Search</button>
     </form>
-    <p class="search-hint" id="searchHint">Try: name leaked, viral, terbaru</p>
+    <p class="search-hint" id="searchHint">Try: name leaked, viral, latest, exclusive</p>
 
     <h1 id="pageHeading">Loading...</h1>
     <p class="desc" id="siteDesc"></p>
@@ -186,7 +186,7 @@ permalink: /name/
         document.onclick=function(e){if(mo&&!menu.contains(e.target)){mo=false;menu.style.display='none';im.style.display='';ic.style.display='none';}};
         
         // ============================================
-        // ⚙️ KONFIGURASI ⚙️
+        // ⚙️ CONFIGURATION ⚙️
         // ============================================
         var ALL_BLOG_IDS=[
             '3849070220815751744',
@@ -194,7 +194,7 @@ permalink: /name/
             '3878198361264397837'
         ];
         var MAX_POSTS_PER_PAGE=24;
-        var DEFAULT_LABEL='';
+        var DEFAULT_LABEL='blog';
         var BASE_PATH='/name/';
         
         function seededShuffle(arr,seed){
@@ -455,7 +455,7 @@ permalink: /name/
                 var imgAlt=altText(title,cats);
                 var imgAltSafe=imgAlt.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
                 
-                var leakedTerms=['leaked','leak','viral','terbaru','exclusive','hot','terkini'];
+                var leakedTerms=['leaked','leak','viral','latest','exclusive','hot','new'];
                 var hasLeaked=leakedTerms.some(function(t){return title.toLowerCase().includes(t);});
                 var seoTitle=title;
                 if(!hasLeaked&&cats.some(function(c){return leakedTerms.some(function(t){return c.toLowerCase().includes(t);});})){
@@ -527,10 +527,10 @@ permalink: /name/
         // ============================================
         var si=$('searchInput');if(si&&LABEL)si.value=LABEL;
         if(LABEL)$('searchHint').textContent='Showing results for: '+LABEL;
-        else $('searchHint').textContent='Try: name leaked, viral, terbaru, exclusive';
+        else $('searchHint').textContent='Try: name leaked, viral, latest, exclusive';
         
         if(LABEL){
-            var il2=/leak|viral|terbaru|exclusive|hot|terkini/i.test(LABEL);
+            var il2=/leak|viral|latest|exclusive|hot|new/i.test(LABEL);
             var pt,pd;
             if(il2){pt=LABEL+' — '+dn;pd='View '+LABEL+' leaked photos, viral content, and exclusive updates on '+dn+'.';}
             else{pt=LABEL+' Leaked Photos & Viral Updates — '+dn;pd='View latest '+LABEL+' leaked photos, viral content, and exclusive updates on '+dn+'. Browse the full collection.';}
