@@ -1,5 +1,6 @@
 ---
-layout: null
+layout: none
+permalink: /.index.html
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -299,7 +300,7 @@ layout: null
         const POST_SLUG = p.get('p')||'';
         const MAX = parseInt(p.get('max-results'))||24;
         const START = parseInt(p.get('start-index'))||1;
-        const BID = '3878198361264397837';
+        const BID = p.get('blogid')||'3849070220815751744';
         
         $('canonicalUrl').href = location.href;
         
@@ -309,7 +310,9 @@ layout: null
         function strip(h){if(!h)return'';const d=document.createElement('div');d.innerHTML=h;return(d.textContent||'').replace(/\s+/g,' ').trim()}
         function fd(d){try{return new Date(d).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}catch(e){return d}}
         
-        const base = 'https://www.blogger.com/feeds/'+BID+'/posts/default';
+        const base = host.includes('blogspot.com')?
+            'https://'+host+'/feeds/posts/default':
+            'https://www.blogger.com/feeds/'+BID+'/posts/default';
         
         // ============================================
         // SINGLE POST MODE
@@ -352,6 +355,7 @@ layout: null
                 const cats = (post.category||[]).map(c=>c.term).filter(Boolean);
                 const author = post.author?.[0]?.name?.$t||'';
                 
+                // SEO: title = nama artis + leaked keywords
                 let seoTitle = title;
                 const leakedTerms = ['leaked','leak','viral','terbaru','exclusive','hot'];
                 const hasLeakedTerm = leakedTerms.some(t=>title.toLowerCase().includes(t));
@@ -368,6 +372,7 @@ layout: null
                 md.content = 'View latest photos and updates of ' + title + ' on ' + displayName + '.';
                 if(!md.parentNode) document.head.appendChild(md);
                 
+                // Breadcrumb
                 let breadHtml = '<a href="/">Home</a>';
                 if(cats.length){
                     breadHtml += ' &rsaquo; ' + cats.slice(0,3).map(c=>
@@ -377,6 +382,7 @@ layout: null
                 breadHtml += ' &rsaquo; <span>'+esc(title)+'</span>';
                 $('breadcrumb').innerHTML = breadHtml;
                 
+                // Render
                 let html = '<article class="single-post-view">';
                 html += '<h1 class="post-title">'+esc(title)+'</h1>';
                 html += '<div class="post-meta">';
@@ -389,6 +395,7 @@ layout: null
                 html += '<div class="post-body">'+content+'</div>';
                 html += '</article>';
                 
+                // Related posts
                 const relatedPosts = allEntries.filter(e=>{
                     const link = (e.link||[]).find(l=>l.rel==='alternate')?.href||'';
                     const slug = link.split('/').pop().replace('.html','');
@@ -404,7 +411,7 @@ layout: null
                         const link = (e.link||[]).find(l=>l.rel==='alternate')?.href||'#';
                         const slug = link.split('/').pop().replace('.html','');
                         const thumb = hd(e.media$thumbnail?.url);
-                        const relUrl = '/?p='+slug;
+                        const relUrl = '/?p='+slug+(BID!=='3849070220815751744'?'&blogid='+BID:'');
                         
                         html += '<a href="'+relUrl+'" class="related-card">';
                         if(thumb) html += '<img class="related-card-img" src="'+thumb+'" alt="'+esc(t)+'" loading="lazy" onerror="this.style.display=\'none\'">';
@@ -414,6 +421,7 @@ layout: null
                 }
                 
                 container.innerHTML = html;
+                $('pagination').innerHTML = '';
             };
             
             const s = document.createElement('script');
@@ -431,12 +439,14 @@ layout: null
         const si = $('searchInput');
         if(si && LABEL) si.value = LABEL;
         
+        // Search hint
         if(LABEL){
             $('searchHint').textContent = 'Showing results for: ' + LABEL;
         } else {
             $('searchHint').textContent = 'Try: name leaked, viral, terbaru';
         }
         
+        // SEO Title & Description
         if(LABEL){
             const isLeakedQuery = /leak|viral|terbaru|exclusive|hot/i.test(LABEL);
             let pageTitle, pageDesc;
@@ -477,7 +487,10 @@ layout: null
             try{
                 const ur=new URL(u);
                 const slug = ur.pathname.split('/').pop().replace('.html','');
-                return '/?p='+slug;
+                const pp = new URLSearchParams();
+                if(BID!=='3849070220815751744') pp.set('blogid',BID);
+                pp.set('p',slug);
+                return '/?'+pp.toString();
             }catch(e){}
             return u;
         }
@@ -540,6 +553,7 @@ layout: null
             let html = '<p class="count-bar">Showing '+
                 START+'-'+(START+entries.length-1)+' of '+total+' posts</p>';
             
+            // GRID LAYOUT
             html += '<div class="post-grid">';
             
             for(let i=0;i<entries.length;i++){
@@ -581,6 +595,7 @@ layout: null
             
             function bu(page){
                 const pp=new URLSearchParams();
+                if(BID!=='3849070220815751744')pp.set('blogid',BID);
                 if(LABEL && !labelMatched)pp.set('label',LABEL);
                 if(MAX!==24)pp.set('max-results',MAX);
                 if(page>1)pp.set('start-index',(page-1)*MAX+1);
